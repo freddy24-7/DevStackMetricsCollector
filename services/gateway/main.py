@@ -1,16 +1,19 @@
 import asyncio
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.responses import JSONResponse
 
 import broadcaster
 
-app = FastAPI()
 
-
-@app.on_event("startup")
-async def startup():
+@asynccontextmanager
+async def lifespan(app: FastAPI):
     asyncio.create_task(broadcaster.poll_loop())
+    yield
+
+
+app = FastAPI(lifespan=lifespan)
 
 
 @app.get("/health")
@@ -24,7 +27,6 @@ async def ws_metrics(websocket: WebSocket):
     broadcaster.register(websocket)
     try:
         while True:
-            # Keep connection alive; client sends pings
             await websocket.receive_text()
     except WebSocketDisconnect:
         broadcaster.unregister(websocket)
