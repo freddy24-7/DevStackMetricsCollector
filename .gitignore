@@ -1,0 +1,29 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+.venv/
+venv/
+
+# Django
+*.sqlite3
+staticfiles/
+media/
+
+# Environment — never commit real secrets
+.env
+
+# Docker
+postgres_data/
+
+# macOS
+.DS_Store
+
+# IDEs
+.vscode/
+.idea/
+
+# Logs
+*.log

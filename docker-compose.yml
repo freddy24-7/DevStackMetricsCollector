@@ -1,0 +1,90 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: metrics
+      POSTGRES_USER: metrics_user
+      POSTGRES_PASSWORD: metrics_pass
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U metrics_user -d metrics"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  admin:
+    build:
+      context: ./services/admin
+    environment:
+      DATABASE_URL: postgres://metrics_user:metrics_pass@db:5432/metrics
+      DJANGO_SECRET_KEY: dev-secret-key-change-in-production
+      DEBUG: "true"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./services/admin:/app
+    expose:
+      - "8001"
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8001/health/')\""]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 15s
+
+  collector:
+    build:
+      context: ./services/collector
+    environment:
+      DATABASE_URL: postgres://metrics_user:metrics_pass@db:5432/metrics
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./services/collector:/app
+    expose:
+      - "8002"
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8002/health')\""]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  gateway:
+    build:
+      context: ./services/gateway
+    environment:
+      DATABASE_URL: postgres://metrics_user:metrics_pass@db:5432/metrics
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - ./services/gateway:/app
+    expose:
+      - "8000"
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request; urllib.request.urlopen('http://localhost:8000/health')\""]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+
+  nginx:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+    depends_on:
+      admin:
+        condition: service_healthy
+      collector:
+        condition: service_healthy
+      gateway:
+        condition: service_healthy
+
+volumes:
+  postgres_data:

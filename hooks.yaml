@@ -1,0 +1,130 @@
+# Claude Code Hooks — DevStack Metrics Collector
+#
+# Place this file at: .claude/hooks.yaml (or reference via claude_code settings)
+# Hooks enforce constraints mechanically that CLAUDE.md states as instructions.
+#
+# Hook execution order: pre-tool-use → [tool runs] → post-tool-use → post-edit
+
+hooks:
+  # ---------------------------------------------------------------------------
+  # PRE-TOOL-USE HOOKS
+  # Run before any tool executes. Return non-zero to block the tool call.
+  # ---------------------------------------------------------------------------
+
+  pre_tool_use:
+
+    # Block all git operations — git is exclusively the developer's responsibility.
+    # Enforces the "Manual Git Control" rule in CLAUDE.md at the execution layer.
+    - name: block-git-commands
+      match:
+        tool: bash
+        pattern: "^\\s*(git\\s)"
+      action: block
+      message: |
+        Git operations are not permitted via Claude Code on this project.
+        All staging, committing, branching, and pushing is the developer's responsibility.
+        See CLAUDE.md → Workflow & Git Constraints.
+
+    # Warn before any change touches the shared db/ directory.
+    # Schema changes require explicit developer approval before service code depends on them.
+    - name: warn-schema-change
+      match:
+        tool: edit
+        path_pattern: "^db/"
+      action: confirm
+      message: |
+        You are about to modify the shared database schema (db/).
+        Schema changes require explicit developer approval before any service code
+        that depends on the change is written.
+        Confirm you have reviewed the proposed migration. Proceed?
+
+    # Warn before any cross-service file is edited in the same tool call.
+    # Prompts Claude to confirm the change is intentional and documented.
+    - name: warn-cross-service-edit
+      match:
+        tool: edit
+        path_pattern: "^services/(gateway|admin|collector)/"
+      action: confirm
+      message: |
+        This edit touches a service directory. If it also affects an integration
+        seam (API key lifecycle or broadcast pipeline), ensure an integration test
+        is included in this task. Proceed?
+
+  # ---------------------------------------------------------------------------
+  # POST-EDIT HOOKS
+  # Run after every file edit. Used for automated quality checks.
+  # ---------------------------------------------------------------------------
+
+  post_edit:
+
+    # Run ruff linter on any edited Python file.
+    # Catches unused imports, style violations, and common errors automatically.
+    - name: lint-python
+      match:
+        path_pattern: "\\.py$"
+      action: run
+      command: "ruff check --fix {file}"
+      on_failure: warn
+      message: |
+        ruff found issues in {file}. Review the output above before continuing.
+
+    # Run ruff formatter on any edited Python file.
+    # Enforces consistent style without requiring Claude to self-police formatting.
+    - name: format-python
+      match:
+        path_pattern: "\\.py$"
+      action: run
+      command: "ruff format {file}"
+      on_failure: warn
+
+    # Check for unused imports specifically (belt-and-suspenders alongside ruff).
+    # Reinforces the "Orphans" rule in CLAUDE.md.
+    - name: check-unused-imports
+      match:
+        path_pattern: "\\.py$"
+      action: run
+      command: "ruff check --select F401 {file}"
+      on_failure: warn
+      message: |
+        Unused imports detected in {file}.
+        Per CLAUDE.md → Surgical Changes: remove imports made unused by your change.
+
+    # Validate that new test files land in the correct directory.
+    # Prevents tests from being co-located with source files.
+    - name: enforce-test-location
+      match:
+        path_pattern: "test_.*\\.py$"
+      action: run
+      command: |
+        python3 -c "
+        import sys
+        path = '{file}'
+        allowed_prefixes = ('tests/unit/', 'tests/integration/', 'tests/e2e/')
+        if not any(path.startswith(p) for p in allowed_prefixes):
+            print(f'ERROR: Test file {path} is not in tests/unit/, tests/integration/, or tests/e2e/')
+            print('Per CLAUDE.md: never co-locate tests with source files.')
+            sys.exit(1)
+        "
+      on_failure: block
+      message: |
+        Test file must be placed in tests/unit/, tests/integration/, or tests/e2e/.
+        See CLAUDE.md → Testing Behaviour.
+
+  # ---------------------------------------------------------------------------
+  # POST-TOOL-USE HOOKS
+  # Run after any tool completes (including bash). Useful for side-effect checks.
+  # ---------------------------------------------------------------------------
+
+  post_tool_use:
+
+    # After any bash command that looks like a migration, remind Claude to
+    # confirm schema approval before proceeding to service code.
+    - name: migration-reminder
+      match:
+        tool: bash
+        pattern: "(migrate|makemigrations|alembic)"
+      action: notify
+      message: |
+        A migration command was run. Reminder: if this adds or changes tables,
+        confirm developer approval has been given before writing service code
+        that depends on the new schema (see CLAUDE.md → Cross-Service Rules).
