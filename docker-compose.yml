@@ -2,15 +2,15 @@ services:
   db:
     image: postgres:16
     environment:
-      POSTGRES_DB: metrics
-      POSTGRES_USER: metrics_user
-      POSTGRES_PASSWORD: metrics_pass
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
       - postgres_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U metrics_user -d metrics"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -19,9 +19,9 @@ services:
     build:
       context: ./services/admin
     environment:
-      DATABASE_URL: postgres://metrics_user:metrics_pass@db:5432/metrics
-      DJANGO_SECRET_KEY: dev-secret-key-change-in-production
-      DEBUG: "true"
+      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY}
+      DEBUG: ${DEBUG}
     depends_on:
       db:
         condition: service_healthy
@@ -40,7 +40,7 @@ services:
     build:
       context: ./services/collector
     environment:
-      DATABASE_URL: postgres://metrics_user:metrics_pass@db:5432/metrics
+      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
     depends_on:
       db:
         condition: service_healthy
@@ -59,7 +59,7 @@ services:
     build:
       context: ./services/gateway
     environment:
-      DATABASE_URL: postgres://metrics_user:metrics_pass@db:5432/metrics
+      DATABASE_URL: postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
     depends_on:
       db:
         condition: service_healthy

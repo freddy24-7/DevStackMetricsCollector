@@ -1,0 +1,26 @@
+app = "metrics-gateway-freddy"
+primary_region = "lhr"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  PORT = "8000"
+
+[http_service]
+  internal_port = 8000
+  force_https = true
+  auto_stop_machines = true
+  auto_start_machines = true
+  min_machines_running = 1
+
+[[http_service.checks]]
+  grace_period = "10s"
+  interval = "15s"
+  timeout = "5s"
+  path = "/health"
+
+[[vm]]
+  memory = "256mb"
+  cpu_kind = "shared"
+  cpus = 1

@@ -50,10 +50,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "core.wsgi.application"
 
-_db_url = os.environ["DATABASE_URL"]
-# Parse postgres://user:pass@host:port/dbname
 import re
-_m = re.match(r"postgres://([^:]+):([^@]+)@([^:]+):(\d+)/(.+)", _db_url)
+_db_url = os.environ["DATABASE_URL"]
+# Parse postgres://user:pass@host:port/dbname(?query)
+_m = re.match(r"postgres(?:ql)?://([^:]+):([^@]+)@([^:]+):(\d+)/([^?]+)", _db_url)
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
@@ -62,6 +62,7 @@ DATABASES = {
         "PASSWORD": _m.group(2),
         "HOST": _m.group(3),
         "PORT": _m.group(4),
+        "OPTIONS": {"sslmode": "disable"},
     }
 }
 
@@ -78,4 +79,5 @@ USE_I18N = True
 USE_TZ = True
 
 STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"

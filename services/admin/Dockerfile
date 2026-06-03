@@ -9,4 +9,4 @@ COPY . .
 
 RUN chmod +x entrypoint.sh
 ENTRYPOINT ["sh", "./entrypoint.sh"]
-CMD ["gunicorn", "core.wsgi:application", "--bind", "0.0.0.0:8001", "--workers", "2"]
+CMD ["gunicorn", "core.wsgi:application", "--bind", "[::]:8001", "--workers", "2"]

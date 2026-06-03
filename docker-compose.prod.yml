@@ -1,0 +1,15 @@
+# Production override — use with:
+#   docker compose -f docker-compose.yml -f docker-compose.prod.yml up
+#
+# Removes source volume mounts so services run from the baked image.
+# Set all env vars via a production .env file or Railway dashboard.
+
+services:
+  admin:
+    volumes: []
+
+  collector:
+    volumes: []
+
+  gateway:
+    volumes: []
