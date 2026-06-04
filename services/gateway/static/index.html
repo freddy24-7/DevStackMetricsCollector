@@ -15,15 +15,15 @@
       min-height: 100vh;
     }
 
-    /* ---------- LOGIN ---------- */
-    #login-screen {
+    /* ---------- AUTH SCREENS ---------- */
+    #auth-screen {
       display: flex;
       align-items: center;
       justify-content: center;
       min-height: 100vh;
     }
 
-    .login-card {
+    .auth-card {
       background: #1a1d27;
       border: 1px solid #2d3148;
       border-radius: 12px;
@@ -31,17 +31,18 @@
       width: 360px;
     }
 
-    .login-card h1 {
-      font-size: 1.4rem;
-      font-weight: 600;
-      margin-bottom: 0.25rem;
+    .auth-card h1 { font-size: 1.4rem; font-weight: 600; margin-bottom: 0.25rem; }
+    .auth-card p { color: #94a3b8; font-size: 0.875rem; margin-bottom: 1.75rem; }
+
+    .auth-toggle {
+      text-align: center;
+      margin-top: 1.25rem;
+      font-size: 0.85rem;
+      color: #94a3b8;
     }
 
-    .login-card p {
-      color: #94a3b8;
-      font-size: 0.875rem;
-      margin-bottom: 1.75rem;
-    }
+    .auth-toggle a { color: #818cf8; cursor: pointer; text-decoration: none; }
+    .auth-toggle a:hover { text-decoration: underline; }
 
     .field { margin-bottom: 1rem; }
 
@@ -85,12 +86,43 @@
     .btn:hover { background: #4f46e5; }
     .btn:disabled { background: #3730a3; cursor: not-allowed; }
 
-    #login-error {
+    .btn-secondary {
+      background: transparent;
+      border: 1px solid #2d3148;
+      color: #e2e8f0;
+    }
+
+    .btn-secondary:hover { background: #1e2235; }
+
+    .btn-danger {
+      background: transparent;
+      border: 1px solid #7f1d1d;
       color: #f87171;
+      font-size: 0.8rem;
+      padding: 0.3rem 0.7rem;
+      width: auto;
+      margin-top: 0;
+    }
+
+    .btn-danger:hover { background: #7f1d1d22; }
+
+    .btn-sm {
+      font-size: 0.8rem;
+      padding: 0.35rem 0.85rem;
+      width: auto;
+      margin-top: 0;
+    }
+
+    .alert {
       font-size: 0.85rem;
       margin-top: 0.75rem;
+      padding: 0.6rem 0.85rem;
+      border-radius: 6px;
       display: none;
     }
+
+    .alert-error { background: #7f1d1d22; color: #f87171; border: 1px solid #7f1d1d; }
+    .alert-success { background: #06402222; color: #34d399; border: 1px solid #064022; }
 
     /* ---------- DASHBOARD ---------- */
     #dashboard { display: none; }
@@ -106,11 +138,7 @@
 
     header h1 { font-size: 1.1rem; font-weight: 600; }
 
-    .header-right {
-      display: flex;
-      align-items: center;
-      gap: 1rem;
-    }
+    .header-right { display: flex; align-items: center; gap: 1rem; }
 
     #ws-status {
       display: flex;
@@ -120,13 +148,7 @@
       color: #94a3b8;
     }
 
-    .dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #94a3b8;
-    }
-
+    .dot { width: 8px; height: 8px; border-radius: 50%; background: #94a3b8; }
     .dot.connected { background: #34d399; }
     .dot.disconnected { background: #f87171; }
 
@@ -143,8 +165,32 @@
 
     #logout-btn:hover { border-color: #6366f1; color: #e2e8f0; }
 
-    main { padding: 2rem; }
+    /* ---------- TABS ---------- */
+    .tabs {
+      display: flex;
+      gap: 0;
+      border-bottom: 1px solid #1e2235;
+      padding: 0 2rem;
+      background: #1a1d27;
+    }
 
+    .tab {
+      padding: 0.75rem 1.25rem;
+      font-size: 0.875rem;
+      color: #94a3b8;
+      cursor: pointer;
+      border-bottom: 2px solid transparent;
+      margin-bottom: -1px;
+      transition: color 0.15s, border-color 0.15s;
+    }
+
+    .tab:hover { color: #e2e8f0; }
+    .tab.active { color: #818cf8; border-bottom-color: #6366f1; }
+
+    .tab-content { display: none; padding: 2rem; }
+    .tab-content.active { display: block; }
+
+    /* ---------- CHARTS TAB ---------- */
     .node-selector {
       display: flex;
       align-items: center;
@@ -185,41 +231,175 @@
       margin-bottom: 0.25rem;
     }
 
-    .chart-value {
-      font-size: 2rem;
-      font-weight: 700;
+    .chart-value { font-size: 2rem; font-weight: 700; margin-bottom: 1rem; }
+    .chart-value span { font-size: 1rem; color: #94a3b8; }
+    canvas { max-height: 120px; }
+
+    /* ---------- MANAGE TAB ---------- */
+    .section { margin-bottom: 2.5rem; }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
       margin-bottom: 1rem;
     }
 
-    .chart-value span { font-size: 1rem; color: #94a3b8; }
+    .section-header h2 { font-size: 1rem; font-weight: 600; }
 
-    canvas { max-height: 120px; }
+    .card-list { display: flex; flex-direction: column; gap: 0.75rem; }
 
-    #no-nodes {
-      color: #94a3b8;
+    .list-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #1a1d27;
+      border: 1px solid #1e2235;
+      border-radius: 8px;
+      padding: 0.85rem 1.1rem;
       font-size: 0.9rem;
-      margin-top: 2rem;
+    }
+
+    .list-item-left { display: flex; flex-direction: column; gap: 0.2rem; }
+    .list-item-label { font-weight: 500; }
+    .list-item-sub { font-size: 0.78rem; color: #94a3b8; font-family: monospace; }
+    .list-item-actions { display: flex; gap: 0.5rem; align-items: center; }
+
+    .badge {
+      font-size: 0.7rem;
+      padding: 0.2rem 0.55rem;
+      border-radius: 999px;
+      font-weight: 500;
+    }
+
+    .badge-active { background: #06402244; color: #34d399; border: 1px solid #064022; }
+    .badge-revoked { background: #7f1d1d22; color: #f87171; border: 1px solid #7f1d1d44; }
+
+    .empty-state { color: #4b5563; font-size: 0.875rem; padding: 1rem 0; }
+
+    /* ---------- MODAL ---------- */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: #00000088;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 100;
       display: none;
     }
+
+    .modal {
+      background: #1a1d27;
+      border: 1px solid #2d3148;
+      border-radius: 12px;
+      padding: 2rem;
+      width: 400px;
+      max-width: 90vw;
+    }
+
+    .modal h2 { font-size: 1.1rem; margin-bottom: 1rem; }
+
+    .key-display {
+      background: #0f1117;
+      border: 1px solid #2d3148;
+      border-radius: 6px;
+      padding: 0.75rem;
+      font-family: monospace;
+      font-size: 0.8rem;
+      word-break: break-all;
+      color: #34d399;
+      margin-bottom: 1rem;
+    }
+
+    .modal-note { font-size: 0.8rem; color: #f59e0b; margin-bottom: 1.25rem; }
+    .modal-actions { display: flex; gap: 0.75rem; justify-content: flex-end; }
+    .modal-actions .btn { width: auto; margin-top: 0; }
+
+    /* ---------- SETUP INSTRUCTIONS ---------- */
+    .setup-box {
+      background: #1a1d27;
+      border: 1px solid #1e2235;
+      border-radius: 8px;
+      padding: 1.25rem 1.5rem;
+      margin-top: 1rem;
+    }
+
+    .setup-box h3 { font-size: 0.9rem; margin-bottom: 0.75rem; color: #94a3b8; }
+
+    .copy-block { position: relative; margin-bottom: 0.75rem; }
+
+    .copy-block pre {
+      background: #0f1117;
+      border: 1px solid #2d3148;
+      border-radius: 6px;
+      padding: 0.85rem 2.5rem 0.85rem 0.85rem;
+      font-size: 0.78rem;
+      overflow-x: auto;
+      color: #a5f3fc;
+      line-height: 1.6;
+    }
+
+    .setup-box pre {
+      background: #0f1117;
+      border: 1px solid #2d3148;
+      border-radius: 6px;
+      padding: 0.85rem;
+      font-size: 0.78rem;
+      overflow-x: auto;
+      color: #a5f3fc;
+      line-height: 1.6;
+    }
+
+    .copy-btn {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      background: #1e2235;
+      border: 1px solid #2d3148;
+      border-radius: 4px;
+      color: #94a3b8;
+      cursor: pointer;
+      padding: 0.3rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: color 0.15s, border-color 0.15s;
+      line-height: 1;
+    }
+
+    .copy-btn:hover { color: #e2e8f0; border-color: #6366f1; }
+    .copy-btn.copied { color: #34d399; border-color: #064022; }
+    .copy-btn svg { width: 14px; height: 14px; }
+
+    .setup-box p { font-size: 0.85rem; color: #94a3b8; margin-bottom: 0.5rem; }
   </style>
 </head>
 <body>
 
-<!-- LOGIN -->
-<div id="login-screen">
-  <div class="login-card">
-    <h1>DevStack Metrics</h1>
-    <p>Sign in to view your dashboard</p>
-    <div class="field">
-      <label>Username</label>
-      <input type="text" id="username" autocomplete="username" />
+<!-- AUTH SCREEN -->
+<div id="auth-screen">
+  <div class="auth-card">
+    <div id="login-form">
+      <h1>DevStack Metrics</h1>
+      <p>Sign in to view your dashboard</p>
+      <div class="field"><label>Username</label><input type="text" id="login-username" autocomplete="username" /></div>
+      <div class="field"><label>Password</label><input type="password" id="login-password" autocomplete="current-password" /></div>
+      <button class="btn" id="login-btn">Sign in</button>
+      <div class="alert alert-error" id="login-error">Invalid username or password.</div>
+      <div class="auth-toggle">Don't have an account? <a onclick="showRegister()">Sign up</a></div>
     </div>
-    <div class="field">
-      <label>Password</label>
-      <input type="password" id="password" autocomplete="current-password" />
+
+    <div id="register-form" style="display:none">
+      <h1>DevStack Metrics</h1>
+      <p>Create your account</p>
+      <div class="field"><label>Username</label><input type="text" id="reg-username" autocomplete="username" /></div>
+      <div class="field"><label>Password <span style="color:#4b5563;font-size:0.75rem">(min 8 chars)</span></label><input type="password" id="reg-password" autocomplete="new-password" /></div>
+      <div class="field"><label>Confirm password</label><input type="password" id="reg-confirm" autocomplete="new-password" /></div>
+      <button class="btn" id="register-btn">Create account</button>
+      <div class="alert alert-error" id="register-error"></div>
+      <div class="auth-toggle">Already have an account? <a onclick="showLogin()">Sign in</a></div>
     </div>
-    <button class="btn" id="login-btn">Sign in</button>
-    <div id="login-error">Invalid username or password.</div>
   </div>
 </div>
 
@@ -236,12 +416,18 @@
     </div>
   </header>
 
-  <main>
+  <div class="tabs">
+    <div class="tab active" onclick="switchTab('metrics')">Live Metrics</div>
+    <div class="tab" onclick="switchTab('manage')">Manage</div>
+    <div class="tab" onclick="switchTab('setup')">Setup Guide</div>
+  </div>
+
+  <!-- METRICS TAB -->
+  <div class="tab-content active" id="tab-metrics">
     <div class="node-selector">
       <label for="node-select">Node</label>
       <select id="node-select"></select>
     </div>
-
     <div class="charts">
       <div class="chart-card">
         <h3>CPU Usage</h3>
@@ -259,47 +445,187 @@
         <canvas id="disk-chart"></canvas>
       </div>
     </div>
+    <p id="no-nodes" style="color:#4b5563;font-size:0.875rem;margin-top:1.5rem;display:none">
+      No nodes yet. Go to <a onclick="switchTab('manage')" style="color:#818cf8;cursor:pointer">Manage</a> to add one.
+    </p>
+  </div>
 
-    <p id="no-nodes">No nodes registered yet. Register a node via the API to start seeing metrics.</p>
-  </main>
+  <!-- MANAGE TAB -->
+  <div class="tab-content" id="tab-manage">
+
+    <!-- API Keys -->
+    <div class="section">
+      <div class="section-header">
+        <h2>API Keys</h2>
+        <button class="btn btn-sm" onclick="createKey()">+ New key</button>
+      </div>
+      <div class="card-list" id="keys-list">
+        <p class="empty-state">No keys yet.</p>
+      </div>
+    </div>
+
+    <!-- Nodes -->
+    <div class="section">
+      <div class="section-header">
+        <h2>Nodes</h2>
+        <button class="btn btn-sm" onclick="showAddNode()">+ Add node</button>
+      </div>
+      <div id="add-node-form" style="display:none;margin-bottom:1rem">
+        <div style="display:flex;gap:0.75rem;align-items:flex-end">
+          <div class="field" style="margin:0;flex:1"><label>Hostname</label><input type="text" id="node-hostname" placeholder="my-server.local" /></div>
+          <div class="field" style="margin:0;flex:1"><label>Label</label><input type="text" id="node-label" placeholder="Home Server" /></div>
+          <button class="btn btn-sm" onclick="addNode()" style="margin-bottom:0">Add</button>
+          <button class="btn btn-sm btn-secondary" onclick="hideAddNode()" style="margin-bottom:0">Cancel</button>
+        </div>
+        <div class="alert alert-error" id="node-error"></div>
+      </div>
+      <div class="card-list" id="nodes-list">
+        <p class="empty-state">No nodes yet.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- SETUP TAB -->
+  <div class="tab-content" id="tab-setup">
+    <div class="setup-box">
+      <p>To stream real metrics from your server, run the monitoring agent. It reads CPU, RAM and disk usage every 5 seconds and sends them here.</p>
+
+      <h3 style="margin-top:1.25rem">Step 1 — Generate an API key and add a node</h3>
+      <p>Go to the <a onclick="switchTab('manage')" style="color:#818cf8;cursor:pointer">Manage</a> tab, create an API key and add a node. Note down both values — you will need the <strong style="color:#e2e8f0">API key</strong> (shown once after creation) and the <strong style="color:#e2e8f0">Node ID</strong> (shown below the hostname in the Nodes list).</p>
+
+      <h3 style="margin-top:1.25rem">Step 2 — Install the dependency</h3>
+
+      <!-- OS tabs -->
+      <div style="display:flex;gap:0;margin-bottom:1rem;margin-top:0.5rem;border-bottom:1px solid #2d3148;">
+        <div class="os-tab active" onclick="switchOs('mac')" id="os-tab-mac" style="padding:0.5rem 1rem;font-size:0.8rem;color:#818cf8;cursor:pointer;border-bottom:2px solid #6366f1;margin-bottom:-1px;">macOS / Linux</div>
+        <div class="os-tab" onclick="switchOs('win')" id="os-tab-win" style="padding:0.5rem 1rem;font-size:0.8rem;color:#94a3b8;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;">Windows</div>
+      </div>
+
+      <!-- macOS / Linux -->
+      <div id="os-mac">
+        <div class="copy-block">
+          <pre id="pre-psutil1">pip3 install psutil</pre>
+          <button class="copy-btn" onclick="copyBlock('pre-psutil1', this)" title="Copy"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+        </div>
+        <p>If pip3 is not found:</p>
+        <div class="copy-block">
+          <pre id="pre-psutil2">python3 -m pip install psutil</pre>
+          <button class="copy-btn" onclick="copyBlock('pre-psutil2', this)" title="Copy"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+        </div>
+
+        <h3 style="margin-top:1.25rem">Step 3 — Download and run the agent</h3>
+        <p>Open your terminal and run these two commands:</p>
+        <div class="copy-block">
+          <pre id="pre-download">curl -sSL https://metrics-nginx-freddy.fly.dev/static/agent.py -o agent.py</pre>
+          <button class="copy-btn" onclick="copyBlock('pre-download', this)" title="Copy"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+        </div>
+        <div class="copy-block">
+          <pre id="pre-run">python3 agent.py --url https://metrics-nginx-freddy.fly.dev --key YOUR_API_KEY --node YOUR_NODE_ID</pre>
+          <button class="copy-btn" onclick="copyBlock('pre-run', this)" title="Copy"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+        </div>
+        <p>You will see your metrics printing in the terminal. Switch to the <a onclick="switchTab('metrics')" style="color:#818cf8;cursor:pointer">Live Metrics</a> tab to watch the charts update in real time.</p>
+
+        <h3 style="margin-top:1.25rem">Keep it running after closing the terminal</h3>
+        <p>If you want the agent to keep running in the background (e.g. on a server):</p>
+        <div class="copy-block">
+          <pre id="pre-bg">nohup python3 agent.py --url https://metrics-nginx-freddy.fly.dev --key YOUR_API_KEY --node YOUR_NODE_ID > agent.log 2>&1 &</pre>
+          <button class="copy-btn" onclick="copyBlock('pre-bg', this)" title="Copy"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+        </div>
+      </div>
+
+      <!-- Windows -->
+      <div id="os-win" style="display:none">
+        <p style="margin-bottom:0.75rem">Requires Python 3.8+ installed and added to PATH. If you don't have Python, download it from <a href="https://python.org" target="_blank" style="color:#818cf8">python.org</a> — make sure to check <strong style="color:#e2e8f0">"Add Python to PATH"</strong> during installation.</p>
+        <div class="copy-block">
+          <pre id="pre-win-psutil">pip install psutil</pre>
+          <button class="copy-btn" onclick="copyBlock('pre-win-psutil', this)" title="Copy"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+        </div>
+        <p>If pip is not found:</p>
+        <div class="copy-block">
+          <pre id="pre-win-psutil2">python -m pip install psutil</pre>
+          <button class="copy-btn" onclick="copyBlock('pre-win-psutil2', this)" title="Copy"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+        </div>
+
+        <h3 style="margin-top:1.25rem">Step 3 — Download and run the agent</h3>
+        <p>Open Command Prompt or PowerShell and run these two commands:</p>
+        <div class="copy-block">
+          <pre id="pre-win-download">curl -sSL https://metrics-nginx-freddy.fly.dev/static/agent.py -o agent.py</pre>
+          <button class="copy-btn" onclick="copyBlock('pre-win-download', this)" title="Copy"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+        </div>
+        <div class="copy-block">
+          <pre id="pre-win-run">python agent.py --url https://metrics-nginx-freddy.fly.dev --key YOUR_API_KEY --node YOUR_NODE_ID</pre>
+          <button class="copy-btn" onclick="copyBlock('pre-win-run', this)" title="Copy"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+        </div>
+        <p>You will see your metrics printing in the terminal. Switch to the <a onclick="switchTab('metrics')" style="color:#818cf8;cursor:pointer">Live Metrics</a> tab to watch the charts update in real time.</p>
+
+        <h3 style="margin-top:1.25rem">Keep it running after closing the terminal</h3>
+        <p>Run in the background using PowerShell:</p>
+        <div class="copy-block">
+          <pre id="pre-win-bg">Start-Process python -ArgumentList "agent.py --url https://metrics-nginx-freddy.fly.dev --key YOUR_API_KEY --node YOUR_NODE_ID" -WindowStyle Hidden</pre>
+          <button class="copy-btn" onclick="copyBlock('pre-win-bg', this)" title="Copy"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- NEW KEY MODAL -->
+<div class="modal-overlay" id="key-modal">
+  <div class="modal">
+    <h2>Your new API key</h2>
+    <div class="key-display" id="key-display"></div>
+    <p class="modal-note">⚠ Copy this key now — it won't be shown again.</p>
+    <div class="modal-actions">
+      <button class="btn btn-sm btn-secondary" onclick="copyKey()">Copy</button>
+      <button class="btn btn-sm" onclick="closeKeyModal()">Done</button>
+    </div>
+  </div>
 </div>
 
 <script>
 const BASE = window.location.origin;
-const WS_URL = (window.location.protocol === "https:" ? "wss://" : "ws://") + window.location.host + "/ws/metrics";
+const WS_URL = (location.protocol === "https:" ? "wss://" : "ws://") + location.host + "/ws/metrics";
 const MAX_POINTS = 30;
 
 let selectedNodeId = null;
 let ws = null;
 let wsReconnectTimer = null;
+let currentKey = null;
+
+// ---------- Tabs ----------
+function switchTab(name) {
+  document.querySelectorAll(".tab").forEach((t, i) => {
+    const names = ["metrics", "manage", "setup"];
+    t.classList.toggle("active", names[i] === name);
+  });
+  document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active"));
+  document.getElementById("tab-" + name).classList.add("active");
+  if (name === "manage") { loadKeys(); loadNodes(); }
+}
+
+// ---------- Auth toggle ----------
+function showRegister() {
+  document.getElementById("login-form").style.display = "none";
+  document.getElementById("register-form").style.display = "block";
+}
+
+function showLogin() {
+  document.getElementById("register-form").style.display = "none";
+  document.getElementById("login-form").style.display = "block";
+}
 
 // ---------- Charts ----------
 function makeChart(id, color) {
-  const ctx = document.getElementById(id).getContext("2d");
-  return new Chart(ctx, {
+  return new Chart(document.getElementById(id).getContext("2d"), {
     type: "line",
-    data: {
-      labels: [],
-      datasets: [{
-        data: [],
-        borderColor: color,
-        backgroundColor: color + "22",
-        borderWidth: 2,
-        pointRadius: 0,
-        fill: true,
-        tension: 0.4,
-      }]
-    },
+    data: { labels: [], datasets: [{ data: [], borderColor: color, backgroundColor: color + "22", borderWidth: 2, pointRadius: 0, fill: true, tension: 0.4 }] },
     options: {
       animation: false,
       plugins: { legend: { display: false } },
       scales: {
         x: { display: false },
-        y: {
-          min: 0, max: 100,
-          ticks: { color: "#94a3b8", font: { size: 10 } },
-          grid: { color: "#1e2235" },
-        }
+        y: { min: 0, max: 100, ticks: { color: "#94a3b8", font: { size: 10 } }, grid: { color: "#1e2235" } }
       }
     }
   });
@@ -312,14 +638,32 @@ const charts = {
 };
 
 function pushPoint(chart, value) {
-  const ts = new Date().toLocaleTimeString();
-  chart.data.labels.push(ts);
+  chart.data.labels.push(new Date().toLocaleTimeString());
   chart.data.datasets[0].data.push(value);
-  if (chart.data.labels.length > MAX_POINTS) {
-    chart.data.labels.shift();
-    chart.data.datasets[0].data.shift();
-  }
+  if (chart.data.labels.length > MAX_POINTS) { chart.data.labels.shift(); chart.data.datasets[0].data.shift(); }
   chart.update("none");
+}
+
+const ICON_COPY = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>`;
+const ICON_CHECK = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>`;
+
+function switchOs(os) {
+  document.getElementById("os-mac").style.display = os === "mac" ? "block" : "none";
+  document.getElementById("os-win").style.display = os === "win" ? "block" : "none";
+  ["mac", "win"].forEach(o => {
+    const tab = document.getElementById("os-tab-" + o);
+    tab.style.color = o === os ? "#818cf8" : "#94a3b8";
+    tab.style.borderBottomColor = o === os ? "#6366f1" : "transparent";
+  });
+}
+
+function copyBlock(preId, btn) {
+  const text = document.getElementById(preId).textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.innerHTML = ICON_CHECK;
+    btn.classList.add("copied");
+    setTimeout(() => { btn.innerHTML = ICON_COPY; btn.classList.remove("copied"); }, 2000);
+  });
 }
 
 function updateValues(cpu, ram, disk) {
@@ -333,130 +677,244 @@ function updateValues(cpu, ram, disk) {
 
 // ---------- WebSocket ----------
 function setWsStatus(connected) {
-  const dot = document.getElementById("ws-dot");
-  const label = document.getElementById("ws-label");
-  dot.className = "dot " + (connected ? "connected" : "disconnected");
-  label.textContent = connected ? "Live" : "Disconnected";
+  document.getElementById("ws-dot").className = "dot " + (connected ? "connected" : "disconnected");
+  document.getElementById("ws-label").textContent = connected ? "Live" : "Disconnected";
 }
 
 function connectWs() {
   if (ws) ws.close();
   ws = new WebSocket(WS_URL);
-
-  ws.onopen = () => {
-    setWsStatus(true);
-    clearTimeout(wsReconnectTimer);
-  };
-
-  ws.onmessage = (e) => {
+  ws.onopen = () => { setWsStatus(true); clearTimeout(wsReconnectTimer); };
+  ws.onmessage = e => {
     const msg = JSON.parse(e.data);
-    if (msg.node_id === selectedNodeId) {
-      updateValues(msg.cpu_pct, msg.ram_pct, msg.disk_pct);
-    }
+    if (msg.node_id === selectedNodeId) updateValues(msg.cpu_pct, msg.ram_pct, msg.disk_pct);
   };
-
-  ws.onclose = () => {
-    setWsStatus(false);
-    wsReconnectTimer = setTimeout(connectWs, 3000);
-  };
-
+  ws.onclose = () => { setWsStatus(false); wsReconnectTimer = setTimeout(connectWs, 3000); };
   ws.onerror = () => ws.close();
 }
 
-// ---------- API ----------
+// ---------- API helpers ----------
+let _csrfToken = "";
+
 async function apiFetch(path, opts = {}) {
-  const res = await fetch(BASE + path, {
+  const { headers: extraHeaders, ...rest } = opts;
+  return fetch(BASE + path, {
     credentials: "include",
-    headers: { "Content-Type": "application/json", ...opts.headers },
-    ...opts,
+    ...rest,
+    headers: {
+      "Content-Type": "application/json",
+      "X-Requested-With": "XMLHttpRequest",
+      ...extraHeaders,
+    },
   });
-  return res;
 }
 
-async function getCsrf() {
-  // Extract CSRF token from cookie
-  const match = document.cookie.match(/csrftoken=([^;]+)/);
-  return match ? match[1] : "";
-}
+function getCsrf() { return _csrfToken; }
 
-async function loadNodes() {
-  const res = await apiFetch("/api/admin/nodes/");
-  if (!res.ok) return;
-  const nodes = await res.json();
-  const select = document.getElementById("node-select");
-  select.innerHTML = "";
-  if (nodes.length === 0) {
-    document.getElementById("no-nodes").style.display = "block";
-    return;
+async function fetchCsrf() {
+  const res = await apiFetch("/api/admin/auth/csrf/");
+  if (res.ok) {
+    const data = await res.json();
+    _csrfToken = data.csrfToken;
   }
-  document.getElementById("no-nodes").style.display = "none";
-  nodes.forEach(n => {
-    const opt = document.createElement("option");
-    opt.value = n.id;
-    opt.textContent = n.label + " (" + n.hostname + ")";
-    select.appendChild(opt);
-  });
-  selectedNodeId = nodes[0].id;
 }
 
 // ---------- Login ----------
 document.getElementById("login-btn").addEventListener("click", async () => {
   const btn = document.getElementById("login-btn");
   const err = document.getElementById("login-error");
-  btn.disabled = true;
-  err.style.display = "none";
-
+  btn.disabled = true; err.style.display = "none";
   const res = await apiFetch("/api/admin/auth/login/", {
     method: "POST",
-    body: JSON.stringify({
-      username: document.getElementById("username").value,
-      password: document.getElementById("password").value,
-    }),
+    body: JSON.stringify({ username: document.getElementById("login-username").value, password: document.getElementById("login-password").value }),
   });
+  if (res.ok) { showDashboard(); }
+  else { err.style.display = "block"; btn.disabled = false; }
+});
 
-  if (res.ok) {
-    showDashboard();
-  } else {
+document.getElementById("login-password").addEventListener("keydown", e => { if (e.key === "Enter") document.getElementById("login-btn").click(); });
+
+// ---------- Register ----------
+document.getElementById("register-btn").addEventListener("click", async () => {
+  const btn = document.getElementById("register-btn");
+  const err = document.getElementById("register-error");
+  const pw = document.getElementById("reg-password").value;
+  const confirm = document.getElementById("reg-confirm").value;
+  err.style.display = "none";
+
+  if (pw !== confirm) { err.textContent = "Passwords do not match."; err.style.display = "block"; return; }
+
+  btn.disabled = true;
+  const res = await apiFetch("/api/admin/auth/register/", {
+    method: "POST",
+    body: JSON.stringify({ username: document.getElementById("reg-username").value, password: pw }),
+  });
+  if (res.ok) { showDashboard(); }
+  else {
+    const data = await res.json();
+    err.textContent = data.detail || "Registration failed.";
     err.style.display = "block";
     btn.disabled = false;
   }
 });
 
-document.getElementById("password").addEventListener("keydown", e => {
-  if (e.key === "Enter") document.getElementById("login-btn").click();
-});
-
 // ---------- Logout ----------
 document.getElementById("logout-btn").addEventListener("click", async () => {
-  const csrf = await getCsrf();
-  await apiFetch("/api/admin/auth/logout/", {
-    method: "POST",
-    headers: { "X-CSRFToken": csrf },
-  });
-  if (ws) ws.close();
+  await apiFetch("/api/admin/auth/logout/", { method: "POST", headers: { "X-CSRFToken": getCsrf() } });
+  if (ws) { ws.close(); ws = null; }
+  clearTimeout(wsReconnectTimer);
+  // Reset all state
+  _csrfToken = "";
+  selectedNodeId = null;
+  document.getElementById("node-select").innerHTML = "";
+  document.getElementById("keys-list").innerHTML = '<p class="empty-state">No keys yet.</p>';
+  document.getElementById("nodes-list").innerHTML = '<p class="empty-state">No nodes yet.</p>';
+  document.getElementById("cpu-value").innerHTML = '—<span>%</span>';
+  document.getElementById("ram-value").innerHTML = '—<span>%</span>';
+  document.getElementById("disk-value").innerHTML = '—<span>%</span>';
+  charts.cpu.data.labels = []; charts.cpu.data.datasets[0].data = []; charts.cpu.update("none");
+  charts.ram.data.labels = []; charts.ram.data.datasets[0].data = []; charts.ram.update("none");
+  charts.disk.data.labels = []; charts.disk.data.datasets[0].data = []; charts.disk.update("none");
+  setWsStatus(false);
   document.getElementById("dashboard").style.display = "none";
-  document.getElementById("login-screen").style.display = "flex";
+  document.getElementById("auth-screen").style.display = "flex";
+  showLogin();
 });
 
 // ---------- Node selector ----------
-document.getElementById("node-select").addEventListener("change", e => {
-  selectedNodeId = e.target.value;
-});
+document.getElementById("node-select").addEventListener("change", e => { selectedNodeId = e.target.value; });
 
-// ---------- Init ----------
+// ---------- Load nodes (for dropdown) ----------
+async function loadNodeSelector() {
+  const res = await apiFetch("/api/admin/nodes/");
+  if (!res.ok) return;
+  const nodes = await res.json();
+  const select = document.getElementById("node-select");
+  select.innerHTML = "";
+  document.getElementById("no-nodes").style.display = nodes.length === 0 ? "block" : "none";
+  nodes.forEach(n => {
+    const opt = document.createElement("option");
+    opt.value = n.id; opt.textContent = n.label + " (" + n.hostname + ")";
+    select.appendChild(opt);
+  });
+  if (nodes.length > 0) selectedNodeId = nodes[0].id;
+}
+
+// ---------- Keys management ----------
+async function loadKeys() {
+  const res = await apiFetch("/api/admin/keys/");
+  if (!res.ok) return;
+  const keys = await res.json();
+  const list = document.getElementById("keys-list");
+  if (keys.length === 0) { list.innerHTML = '<p class="empty-state">No keys yet.</p>'; return; }
+  list.innerHTML = keys.map(k => `
+    <div class="list-item">
+      <div class="list-item-left">
+        <span class="list-item-label">Key ${k.id.slice(0,8)}…</span>
+        <span class="list-item-sub">Created ${new Date(k.created_at).toLocaleDateString()}</span>
+      </div>
+      <div class="list-item-actions">
+        <span class="badge ${k.revoked_at ? 'badge-revoked' : 'badge-active'}">${k.revoked_at ? 'Revoked' : 'Active'}</span>
+        ${!k.revoked_at ? `<button class="btn btn-danger" onclick="revokeKey('${k.id}')">Revoke</button>` : ''}
+      </div>
+    </div>
+  `).join("");
+}
+
+async function createKey() {
+  if (!_csrfToken) await fetchCsrf();
+  const res = await apiFetch("/api/admin/keys/", { method: "POST", headers: { "X-CSRFToken": getCsrf() } });
+  if (!res.ok) return;
+  const data = await res.json();
+  currentKey = data.key;
+  document.getElementById("key-display").textContent = data.key;
+  document.getElementById("key-modal").style.display = "flex";
+  loadKeys();
+}
+
+async function revokeKey(id) {
+  if (!confirm("Revoke this key? Any agent using it will stop working.")) return;
+  await apiFetch(`/api/admin/keys/${id}/revoke/`, { method: "POST", headers: { "X-CSRFToken": getCsrf() } });
+  loadKeys();
+}
+
+function copyKey() {
+  navigator.clipboard.writeText(currentKey);
+}
+
+function closeKeyModal() {
+  document.getElementById("key-modal").style.display = "none";
+  currentKey = null;
+}
+
+// ---------- Nodes management ----------
+async function loadNodes() {
+  const res = await apiFetch("/api/admin/nodes/");
+  if (!res.ok) return;
+  const nodes = await res.json();
+  const list = document.getElementById("nodes-list");
+  if (nodes.length === 0) { list.innerHTML = '<p class="empty-state">No nodes yet.</p>'; return; }
+  list.innerHTML = nodes.map(n => `
+    <div class="list-item">
+      <div class="list-item-left">
+        <span class="list-item-label">${n.label}</span>
+        <span class="list-item-sub">${n.hostname} &nbsp;·&nbsp; ID: ${n.id}</span>
+      </div>
+      <div class="list-item-actions">
+        <button class="btn btn-danger" onclick="deleteNode('${n.id}')">Delete</button>
+      </div>
+    </div>
+  `).join("");
+}
+
+function showAddNode() { document.getElementById("add-node-form").style.display = "block"; }
+function hideAddNode() {
+  document.getElementById("add-node-form").style.display = "none";
+  document.getElementById("node-hostname").value = "";
+  document.getElementById("node-label").value = "";
+  document.getElementById("node-error").style.display = "none";
+}
+
+async function addNode() {
+  const hostname = document.getElementById("node-hostname").value.trim();
+  const label = document.getElementById("node-label").value.trim();
+  const err = document.getElementById("node-error");
+  err.style.display = "none";
+  if (!hostname || !label) { err.textContent = "Both fields are required."; err.style.display = "block"; return; }
+  if (!_csrfToken) await fetchCsrf();
+  const res = await apiFetch("/api/admin/nodes/", {
+    method: "POST",
+    headers: { "X-CSRFToken": getCsrf() },
+    body: JSON.stringify({ hostname, label }),
+  });
+  if (res.ok) { hideAddNode(); loadNodes(); loadNodeSelector(); }
+  else {
+    const body = await res.json().catch(() => ({}));
+    err.textContent = body.detail || "Failed to add node (" + res.status + ").";
+    err.style.display = "block";
+  }
+}
+
+async function deleteNode(id) {
+  if (!confirm("Delete this node? All its metrics will also be deleted.")) return;
+  await apiFetch(`/api/admin/nodes/${id}/`, { method: "DELETE", headers: { "X-CSRFToken": getCsrf() } });
+  loadNodes();
+  loadNodeSelector();
+}
+
+// ---------- Show dashboard ----------
 async function showDashboard() {
-  document.getElementById("login-screen").style.display = "none";
+  await fetchCsrf();
+  document.getElementById("auth-screen").style.display = "none";
   document.getElementById("dashboard").style.display = "block";
-  await loadNodes();
+  await loadNodeSelector();
   connectWs();
 }
 
-// Check if already logged in
+// ---------- Init — check if already logged in ----------
 (async () => {
   const res = await apiFetch("/api/admin/auth/me/");
-  if (res.ok) {
-    showDashboard();
-  }
+  if (res.ok) showDashboard();
 })();
 </script>
 </body>
