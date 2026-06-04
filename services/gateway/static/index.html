@@ -459,6 +459,7 @@
         <h2>API Keys</h2>
         <button class="btn btn-sm" onclick="createKey()">+ New key</button>
       </div>
+      <p style="font-size:0.8rem;color:#4b5563;margin-bottom:0.75rem">Revoked keys are disabled immediately but kept for audit purposes. Any agent using a revoked key will receive a 401 error.</p>
       <div class="card-list" id="keys-list">
         <p class="empty-state">No keys yet.</p>
       </div>
@@ -470,6 +471,7 @@
         <h2>Nodes</h2>
         <button class="btn btn-sm" onclick="showAddNode()">+ Add node</button>
       </div>
+      <p style="font-size:0.8rem;color:#4b5563;margin-bottom:0.75rem">Deleting a node permanently removes it and all its metrics history.</p>
       <div id="add-node-form" style="display:none;margin-bottom:1rem">
         <div style="display:flex;gap:0.75rem;align-items:flex-end">
           <div class="field" style="margin:0;flex:1"><label>Hostname</label><input type="text" id="node-hostname" placeholder="my-server.local" /></div>
