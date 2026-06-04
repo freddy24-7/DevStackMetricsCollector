@@ -12,9 +12,12 @@ DevStack Metrics lets you monitor CPU, RAM, and disk usage from any server in re
 
 **User flow:**
 1. Sign up at the dashboard URL
-2. Generate an API key and register a node in the Manage tab
-3. Run the monitoring agent on your server (one command)
-4. Watch your metrics update live in the dashboard
+2. Go to the **Manage** tab — create an API key and add a node
+3. A pre-filled quick setup block appears automatically with all three terminal commands ready to copy (install dependency, download agent, run agent) — credentials are included, no manual copy-pasting required
+4. Run the three commands in your terminal one at a time
+5. Watch your metrics update live in the **Live Metrics** tab
+
+The quick setup block disappears after all three commands have been copied. A full manual alternative is available in the **Setup Guide** tab for users who prefer step-by-step instructions or need Windows-specific commands.
 
 ---
 
@@ -66,9 +69,11 @@ Two integration points connect the services through the shared database — no i
 
 1. Visit **https://metrics-nginx-freddy.fly.dev**
 2. Click **Sign up** and create an account
-3. Go to the **Manage** tab — create an API key and add a node. Note down both the API key and the Node ID
-4. Go to the **Setup Guide** tab and follow the instructions for your OS to download and run the agent
+3. Go to the **Manage** tab — create an API key, then add a node
+4. A pre-filled quick setup block appears with three terminal commands — copy and run them one at a time in your terminal (works on macOS, Linux, and Windows)
 5. Switch to **Live Metrics** and watch your charts update in real time
+
+> **Note:** The quick setup block is OS-aware — it automatically uses `pip3`/`python3` on macOS/Linux and `pip`/`python` on Windows. A full manual guide is available in the **Setup Guide** tab.
 
 ### As a developer (run locally)
 
