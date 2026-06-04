@@ -522,7 +522,10 @@
           <button class="copy-btn" onclick="copyBlock('pre-download', this)" title="Copy"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
         </div>
         <div class="copy-block">
-          <pre id="pre-run">python3 agent.py --url https://metrics-nginx-freddy.fly.dev --key YOUR_API_KEY --node YOUR_NODE_ID</pre>
+          <pre id="pre-run">python3 agent.py \
+  --url https://metrics-nginx-freddy.fly.dev \
+  --key YOUR_API_KEY \
+  --node YOUR_NODE_ID</pre>
           <button class="copy-btn" onclick="copyBlock('pre-run', this)" title="Copy"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
         </div>
         <p>You will see your metrics printing in the terminal. Switch to the <a onclick="switchTab('metrics')" style="color:#818cf8;cursor:pointer">Live Metrics</a> tab to watch the charts update in real time.</p>
@@ -530,7 +533,10 @@
         <h3 style="margin-top:1.25rem">Keep it running after closing the terminal</h3>
         <p>If you want the agent to keep running in the background (e.g. on a server):</p>
         <div class="copy-block">
-          <pre id="pre-bg">nohup python3 agent.py --url https://metrics-nginx-freddy.fly.dev --key YOUR_API_KEY --node YOUR_NODE_ID > agent.log 2>&1 &</pre>
+          <pre id="pre-bg">nohup python3 agent.py \
+  --url https://metrics-nginx-freddy.fly.dev \
+  --key YOUR_API_KEY \
+  --node YOUR_NODE_ID > agent.log 2>&1 &</pre>
           <button class="copy-btn" onclick="copyBlock('pre-bg', this)" title="Copy"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
         </div>
       </div>
@@ -555,7 +561,10 @@
           <button class="copy-btn" onclick="copyBlock('pre-win-download', this)" title="Copy"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
         </div>
         <div class="copy-block">
-          <pre id="pre-win-run">python agent.py --url https://metrics-nginx-freddy.fly.dev --key YOUR_API_KEY --node YOUR_NODE_ID</pre>
+          <pre id="pre-win-run">python agent.py `
+  --url https://metrics-nginx-freddy.fly.dev `
+  --key YOUR_API_KEY `
+  --node YOUR_NODE_ID</pre>
           <button class="copy-btn" onclick="copyBlock('pre-win-run', this)" title="Copy"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
         </div>
         <p>You will see your metrics printing in the terminal. Switch to the <a onclick="switchTab('metrics')" style="color:#818cf8;cursor:pointer">Live Metrics</a> tab to watch the charts update in real time.</p>
@@ -563,7 +572,9 @@
         <h3 style="margin-top:1.25rem">Keep it running after closing the terminal</h3>
         <p>Run in the background using PowerShell:</p>
         <div class="copy-block">
-          <pre id="pre-win-bg">Start-Process python -ArgumentList "agent.py --url https://metrics-nginx-freddy.fly.dev --key YOUR_API_KEY --node YOUR_NODE_ID" -WindowStyle Hidden</pre>
+          <pre id="pre-win-bg">Start-Process python `
+  -ArgumentList "agent.py --url https://metrics-nginx-freddy.fly.dev --key YOUR_API_KEY --node YOUR_NODE_ID" `
+  -WindowStyle Hidden</pre>
           <button class="copy-btn" onclick="copyBlock('pre-win-bg', this)" title="Copy"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
         </div>
       </div>
