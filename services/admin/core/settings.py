@@ -6,6 +6,11 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ["DJANGO_SECRET_KEY"]
 DEBUG = os.environ.get("DEBUG", "false").lower() == "true"
 ALLOWED_HOSTS = ["*"]
+CSRF_TRUSTED_ORIGINS = [
+    "https://metrics-nginx-freddy.fly.dev",
+    "https://metrics-admin-freddy.fly.dev",
+    "http://localhost",
+]
 
 INSTALLED_APPS = [
     "django.contrib.admin",
