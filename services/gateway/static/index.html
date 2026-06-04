@@ -474,8 +474,8 @@
       <p style="font-size:0.8rem;color:#4b5563;margin-bottom:0.75rem">Deleting a node permanently removes it and all its metrics history.</p>
       <div id="add-node-form" style="display:none;margin-bottom:1rem">
         <div style="display:flex;gap:0.75rem;align-items:flex-end">
-          <div class="field" style="margin:0;flex:1"><label>Hostname</label><input type="text" id="node-hostname" placeholder="my-server.local" /></div>
-          <div class="field" style="margin:0;flex:1"><label>Label</label><input type="text" id="node-label" placeholder="Home Server" /></div>
+          <div class="field" style="margin:0;flex:1"><label>Hostname</label><input type="text" id="node-hostname" placeholder="my-server.local" value="my-server.local" /></div>
+          <div class="field" style="margin:0;flex:1"><label>Label</label><input type="text" id="node-label" placeholder="Home Server" value="Home Server" /></div>
           <button class="btn btn-sm" onclick="addNode()" style="margin-bottom:0">Add</button>
           <button class="btn btn-sm btn-secondary" onclick="hideAddNode()" style="margin-bottom:0">Cancel</button>
         </div>
@@ -484,6 +484,33 @@
       <div class="card-list" id="nodes-list">
         <p class="empty-state">No nodes yet.</p>
       </div>
+
+      <!-- Quick-start commands — shown once after node creation, removed after all three are copied -->
+      <div id="quickstart-box" style="display:none;margin-top:1.25rem;background:#0f1117;border:1px solid #6366f144;border-radius:8px;padding:1.1rem 1.25rem;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:0.4rem;">
+          <span style="font-size:0.85rem;font-weight:600;color:#818cf8">Run these commands in your terminal</span>
+          <span style="font-size:0.75rem;color:#4b5563">Disappears after all three are copied</span>
+        </div>
+        <p style="font-size:0.78rem;color:#4b5563;margin-bottom:0.85rem">Copy and run each command one at a time. Commands 1 and 2 only need to run once.</p>
+
+        <p style="font-size:0.78rem;color:#94a3b8;margin-bottom:0.3rem">1 — Install dependency</p>
+        <div class="copy-block">
+          <pre id="qs-cmd-1" style="background:#1a1d27"></pre>
+          <button class="copy-btn qs-btn" id="qs-btn-1" onclick="copyQsStep(1)" title="Copy"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+        </div>
+
+        <p style="font-size:0.78rem;color:#94a3b8;margin-bottom:0.3rem">2 — Download agent</p>
+        <div class="copy-block">
+          <pre id="qs-cmd-2" style="background:#1a1d27"></pre>
+          <button class="copy-btn qs-btn" id="qs-btn-2" onclick="copyQsStep(2)" title="Copy"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+        </div>
+
+        <p style="font-size:0.78rem;color:#94a3b8;margin-bottom:0.3rem">3 — Run agent</p>
+        <div class="copy-block" style="margin-bottom:0">
+          <pre id="qs-cmd-3" style="background:#1a1d27;white-space:pre-wrap"></pre>
+          <button class="copy-btn qs-btn" id="qs-btn-3" onclick="copyQsStep(3)" title="Copy"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg></button>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -491,6 +518,10 @@
   <div class="tab-content" id="tab-setup">
     <div class="setup-box">
       <p>To stream real metrics from your server, run the monitoring agent. It reads CPU, RAM and disk usage every 5 seconds and sends them here.</p>
+
+      <div style="background:#6366f111;border:1px solid #6366f133;border-radius:6px;padding:0.85rem 1rem;margin-top:1rem;font-size:0.85rem;color:#94a3b8">
+        <strong style="color:#818cf8">Quick setup:</strong> If you go to the <a onclick="switchTab('manage')" style="color:#818cf8;cursor:pointer">Manage</a> tab, create an API key, and add a node, a pre-filled command block will appear automatically with all three steps ready to copy. The instructions below are the manual alternative if you prefer to set up step by step.
+      </div>
 
       <h3 style="margin-top:1.25rem">Step 1 — Generate an API key and add a node</h3>
       <p>Go to the <a onclick="switchTab('manage')" style="color:#818cf8;cursor:pointer">Manage</a> tab, create an API key and add a node. Note down both values — you will need the <strong style="color:#e2e8f0">API key</strong> (shown once after creation) and the <strong style="color:#e2e8f0">Node ID</strong> (shown below the hostname in the Nodes list).</p>
@@ -708,6 +739,7 @@ function connectWs() {
 
 // ---------- API helpers ----------
 let _csrfToken = "";
+let _lastRawKey = null;
 
 async function apiFetch(path, opts = {}) {
   const { headers: extraHeaders, ...rest } = opts;
@@ -778,6 +810,7 @@ document.getElementById("logout-btn").addEventListener("click", async () => {
   clearTimeout(wsReconnectTimer);
   // Reset all state
   _csrfToken = "";
+  _lastRawKey = null;
   selectedNodeId = null;
   document.getElementById("node-select").innerHTML = "";
   document.getElementById("keys-list").innerHTML = '<p class="empty-state">No keys yet.</p>';
@@ -840,6 +873,7 @@ async function createKey() {
   if (!res.ok) return;
   const data = await res.json();
   currentKey = data.key;
+  _lastRawKey = data.key;  // store for quickstart
   document.getElementById("key-display").textContent = data.key;
   document.getElementById("key-modal").style.display = "flex";
   loadKeys();
@@ -900,12 +934,56 @@ async function addNode() {
     headers: { "X-CSRFToken": getCsrf() },
     body: JSON.stringify({ hostname, label }),
   });
-  if (res.ok) { hideAddNode(); loadNodes(); loadNodeSelector(); }
-  else {
+  if (res.ok) {
+    const node = await res.json();
+    hideAddNode();
+    loadNodes();
+    loadNodeSelector();
+    showQuickstart(node.id);
+  } else {
     const body = await res.json().catch(() => ({}));
     err.textContent = body.detail || "Failed to add node (" + res.status + ").";
     err.style.display = "block";
   }
+}
+
+let _qsCopied = 0;
+
+function showQuickstart(nodeId) {
+  if (!_lastRawKey) return;
+  _qsCopied = 0;
+  const isWin = navigator.platform.toLowerCase().includes("win");
+  const pip = isWin ? "pip install psutil" : "pip3 install psutil";
+  const python = isWin ? "python" : "python3";
+  const cont = isWin ? "`" : "\\";
+  document.getElementById("qs-cmd-1").textContent = pip;
+  document.getElementById("qs-cmd-2").textContent = "curl -sSL https://metrics-nginx-freddy.fly.dev/static/agent.py -o agent.py";
+  document.getElementById("qs-cmd-3").textContent = `${python} agent.py ${cont}\n  --url https://metrics-nginx-freddy.fly.dev ${cont}\n  --key ${_lastRawKey} ${cont}\n  --node ${nodeId}`;
+  // reset buttons
+  [1,2,3].forEach(i => {
+    const btn = document.getElementById("qs-btn-" + i);
+    btn.innerHTML = ICON_COPY;
+    btn.classList.remove("copied");
+  });
+  document.getElementById("quickstart-box").style.display = "block";
+}
+
+function copyQsStep(step) {
+  const text = document.getElementById("qs-cmd-" + step).textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    const btn = document.getElementById("qs-btn-" + step);
+    btn.innerHTML = ICON_CHECK;
+    btn.classList.add("copied");
+    _qsCopied++;
+    if (_qsCopied === 3) {
+      // all three copied — wipe after brief pause
+      setTimeout(() => {
+        document.getElementById("quickstart-box").style.display = "none";
+        _lastRawKey = null;
+        _qsCopied = 0;
+      }, 1500);
+    }
+  });
 }
 
 async function deleteNode(id) {

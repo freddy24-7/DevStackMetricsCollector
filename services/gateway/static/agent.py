@@ -93,9 +93,13 @@ def main():
     log.info("Agent starting — posting to %s every %.0fs", args.url, args.interval)
     log.info("Node ID: %s", args.node)
 
+    first_success = True
     while True:
         cpu, ram, disk = collect(psutil)
         post_metrics(args.url, args.key, args.node, cpu, ram, disk)
+        if first_success:
+            print("\n  ✓ Data is live! Open the Live Metrics tab in your dashboard to see your charts.\n")
+            first_success = False
         time.sleep(max(0, args.interval - 1))  # cpu_percent already sleeps 1s
 
 
